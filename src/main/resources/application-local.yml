@@ -1,0 +1,85 @@
+#https://galid1.tistory.com/664
+#application-{username}.properties로 application.properties와
+#같은 위상에 두고 active된 profile에 대하여 변경 제공되어야 할 값들 따로 설
+
+#spring framework logging level test
+logging:
+  level:
+    spring.framework: trace
+
+#auto-commit            : false
+#connection-test-query  : connection 검증 쿼리
+#driver-class-name      : 연결할 DB driver class Name
+#idle-timeout           : 일을 안하는 커넥션 풀에 대한 유지시간
+#maximum-pool-size      : 처리가 많이 필요할때 만들어지는 최대 pool 갯수
+#minimum-idle           : 아무런 일을 하지 않아도 유지하고 있을 최대의 pool 갯수
+#TODO : 멀티 트랜젝션 고려 필요 https://eclipse4j.tistory.com/284
+spring:
+  datasource:
+    #url: jdbc:mariammmmdb://175.211.79.58:23306/testmsafront?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Seoul
+    #username: testmsafront
+    #password: testmsafront
+    url: jdbc:mariadb://39.115.145.226:33306/msafronttest?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Seoul
+    username: ishift
+    password: ishift
+    driver-class-name: org.mariadb.jdbc.Driver
+    hikari:
+      auto-commit: false
+      connection-test-query: SELECT 1
+      driver-class-name: org.mariadb.jdbc.Driver
+      idle-timeout: 30000
+      maximum-pool-size: 10
+      minimum-idle: 5
+      pool-name: frontApiPrimaryPool
+  #file setting MultiPartServletRequest
+  # 참조 블로그 - https://gofnrk.tistory.com/36
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 100MB
+      file-size-threshold: 5MB
+      max-request-size: 100MB  
+      resolve-lazily: false
+      location: /data/msa/front/tempFile
+  # 썸네일 처리에 대한 구분
+  # 이미지다 아니다에 대한 구분은 아니고 썸네일 생성 요청/그냥 등록 요청에 대한 썸네일 entity등록, 파일 entity등록 구분 
+  # 썸네일이다/아니다는 api는 하나로, 추상화 처리
+  # location ~만으로는 절대경로 처리가 안됨 - 권한 문제가 있을 수 있음 처리 다시 해야 함
+
+#maria connection이지만 mysql5라서 방언은 mysql5로, table 생성시 물리 변수명 camelcase 없이 그대로 쓰는 것으로
+
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    open-in-view: false
+    hibernate:
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+      ddl-auto: none
+      #ddl-auto: update
+      #ddl-auto: create
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        default_batch_fetch_size: 100   #1 + N에 대한 1번에 가져올 인스턴스 수
+        #dialect: org.hibernate.dialect.MariaDB102Dialect
+
+  #logging
+  
+      
+# Springboot System Manegement
+# 2020년 5월 22일 CYNA 설정 
+management: 
+  endpoints: 
+    web:
+      exposure:
+        include:
+          - "info"
+          - "health"
+  endpoint:
+    health:
+      show-details: always
+
+# server port
+server:
+  port: 9010

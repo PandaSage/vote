@@ -1,0 +1,13 @@
+#현재 profile - local 앞으로 dev와 real도 있을 예정 현재로는 local만 적용
+#TODO : (2020.04.29)application-local 설정이 안정화되면 그를 copy해서 dev와 real용 설정도 만들어야 함
+
+#http://wonwoo.ml/index.php/post/992
+#JPA Entity에 대한 Collection 사용시 주의점
+server:
+  port: 9999
+
+spring:
+  profiles:
+    active:
+    - local
+
